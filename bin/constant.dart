@@ -1,0 +1,1 @@
+const String eMPTYSTRINGVALUE = 'NIL'; // mettre if p le debug 
