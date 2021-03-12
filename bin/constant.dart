@@ -1,1 +1,1 @@
-const String eMPTYSTRINGVALUE = 'NIL'; // mettre if p le debug 
+const String eMPTYSTRINGVALUE = 'NIL'; // mettre à '' hors Debug

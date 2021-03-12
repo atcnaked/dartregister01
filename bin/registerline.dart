@@ -23,10 +23,16 @@ class RegisterLine { // '''éléments de la ligne du registre, used for the glob
   double h_alone_on_position = 0;
   double h_as_instructor = 0;
   double h_total = 0;
-  String observation; 
-  // créer get observation et recopier les notes_de_tache et notes_journee 
+  String observation; ///////////////////////////////////// à suppr
+
   int occurence_TWR = 0;
   int occurence_APP = 0;
+  // WorkingSlot information:
+  String notes_de_tache;
+  String notes_journee;
+  String inCSVlineNumber;
+  bool isValid;
+  String validityError;
 
 
   RegisterLine ( List <String> listOfStringfilteredRawWorkingSlot ){ 
@@ -53,7 +59,15 @@ class RegisterLine { // '''éléments de la ligne du registre, used for the glob
       if ( workingSlot.isTWR ){ occurence_TWR = 1; }
       if ( workingSlot.isAPP ){ occurence_APP = 1; }
     }
-}
+
+    notes_de_tache = workingSlot.notes_de_tache;
+    notes_journee = workingSlot.notes_de_tache;
+    inCSVlineNumber = workingSlot.lineNumber;
+    isValid = workingSlot.isValid;
+    validityError = workingSlot.validityError;
+
+
+  }
   // direct constructor (to create TOTALINE or blank line)
   RegisterLine.intializeFrom (this.date, this.h_as_trainee, this.h_simulator, this.h_alone_on_position, this.h_as_instructor, this.h_total, this.observation, this.occurence_TWR, this.occurence_APP); 
 

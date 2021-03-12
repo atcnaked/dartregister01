@@ -7,16 +7,21 @@ import 'registerline.dart';
 class DayByDayRegister {
   List dayLines;
   RegisterLine totalLine;
-  // ici on devrait rajouter:
-  
-  // discarded WS List <int, String> with line number in csv + their error message
-  // a get to have the numbers of th discarded WS (short info message)
-  // List of Warning addWith date pb
-  // +   List of observations of normal RL as date + OBS
+  // ici on devrait rajouter 3 éléments: 
+  // sumup String = a get to have the numbers of th discarded WS (short info message) build from dayByDayRegisterFrom
+  String discardedWorkingSlotSummary = '';
+  // discarded WS List <int, String> with line number in csv + their error message build from dayByDayRegisterFrom
+  String discardedWorkingSlotErrors = '';
+  // List of all notes task + day (+ validity) build from slotBySlotRegisterFrom
+  String taskAndDayNotes = '';
 
   DayByDayRegister (String fileName){ 
     var monthlyReportWithHeaderRaw = monthlyReportWithHeaderRawFrom(fileName);
+    // ici il faudrait meix passer par 
     var slotBySlotRegister = slotBySlotRegisterFrom(monthlyReportWithHeaderRaw);
+    // ici slotBySlotRegister  n est pas abimé donc on peut extraire des infos globales dessus
+
+
     dayLines = dayByDayRegisterFrom(slotBySlotRegister);
     
     totalLine = RegisterLine.intializeFrom ('Total', 0.0, 0.0, 0.0, 0.0, 0.0, eMPTYSTRINGVALUE, 0, 0); 
@@ -62,45 +67,72 @@ class DayByDayRegister {
           } 
           index++;
         }
-
+    var lineCounter = 2; // 2 car la ligne header occupe le numéro 1
     for (var rawWorkingSlot in monthlyReportWithHeaderRaw){
           // debug: en dessous si on met var ça pose un pb:
           //  type 'List<dynamic>' is not a subtype of type 'List<String>'
           // j'ai donc mis List<String>  et ça marche
           // la logique de vérification de type m'échappe...
+
+          ////////////////////////////////////////////
+          ///
+          ///lineCounter.toString(),  à f !!!!!!!!!!!!!!!!!!!!!!!!
+          /////////////////////////////////////////////////////
           List<String> filteredRawWorkingSlot = [ rawWorkingSlot[date_index],
                                         rawWorkingSlot[total_decimal_index],
                                         rawWorkingSlot[taskLetter_index],
                                         rawWorkingSlot[notes_de_tache_index],
-                                        rawWorkingSlot[notes_journee_index ] ];
+                                        rawWorkingSlot[notes_journee_index ],
+                                        lineCounter.toString() ];
           // ici on peut mettre un check si any vide alors pas de rl mais où mettre 
           var rl = RegisterLine(filteredRawWorkingSlot);
           slotBySlotRegister.add(rl);  
+          lineCounter++;
       }    
     return slotBySlotRegister;
   }
 
 
   List dayByDayRegisterFrom(List slotBySlotRegister){
+    // verif mais pas besoin cond while // if (slotBySlotRegister == []) { return []; }
+
     var dayByDayRegister = [];
-    print('slotBySlotRegister.length: ${slotBySlotRegister.length}');///////////////////////////////////
-    // todo:  empty check on slotBySlotRegister!
-    RegisterLine toProcessRL = slotBySlotRegister.removeAt(0); 
-    // todo:  empty checktoProcessRL!
-    dayByDayRegister.add(toProcessRL);
 
-    while ( slotBySlotRegister.isNotEmpty ) { 
-      // print(slotBySlotRegister.length);
+    var nonEmptyDummyFirstLine = RegisterLine.intializeFrom ('dummy£ ', 0.0, 0.0, 0.0, 0.0, 0.0, eMPTYSTRINGVALUE, 0, 0); 
+    dayByDayRegister.add(nonEmptyDummyFirstLine);
+
+    while ( slotBySlotRegister.isNotEmpty ) {       
       RegisterLine first_SbyS_RL = slotBySlotRegister.removeAt(0); 
-      RegisterLine last_DbyD_RL = dayByDayRegister.last; 
-      last_DbyD_RL.toString();
 
-      if (last_DbyD_RL.isSameDateAs( first_SbyS_RL ) ){
-        last_DbyD_RL.addWith(first_SbyS_RL);
+      //////////////////////
+      // TODO //on alimente taskAndDayNotes avec 
+      var taskAndDayNotesOffirst_SbyS_RL = '${first_SbyS_RL.notes_journee}${first_SbyS_RL.notes_de_tache}${first_SbyS_RL.date}';
+      // TODO// f un get ds RL      
+      taskAndDayNotes = taskAndDayNotes + taskAndDayNotesOffirst_SbyS_RL;
+
+      var first_SbyS_RL_is_NOT_Valid = ! first_SbyS_RL.isValid;
+      if (first_SbyS_RL_is_NOT_Valid) {
+        // TODO//on alimente 
+        // discardedWorkingSlotSummary avec
+        first_SbyS_RL.date; // et
+        first_SbyS_RL.inCSVlineNumber;
+        
+        // TODO//et discardedWorkingSlotErrors avec
+        first_SbyS_RL.date; // et
+        first_SbyS_RL.inCSVlineNumber;// et
+        first_SbyS_RL.validityError;
       }else{
-        dayByDayRegister.add(first_SbyS_RL);
+        RegisterLine last_DbyD_RL = dayByDayRegister.last; // here nonEmptyDummyFirstLine mandatory to make algo simpler
+        last_DbyD_RL.toString();
+
+        if (last_DbyD_RL.isSameDateAs( first_SbyS_RL ) ){
+          last_DbyD_RL.addWith(first_SbyS_RL);
+        }else{
+          dayByDayRegister.add(first_SbyS_RL);
+        }
       }
     }
+    dayByDayRegister.removeAt(0);// remove nonEmptyDummyFirstLine
     return dayByDayRegister;
     }
 

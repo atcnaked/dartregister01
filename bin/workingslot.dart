@@ -15,7 +15,7 @@ class WorkingSlot {
   bool isAPP = false;
   String notes_de_tache;
   String notes_journee;
-
+  String lineNumber;
   bool isValid = true;
   String validityError = '';
 
@@ -25,7 +25,7 @@ class WorkingSlot {
     if (date == eMPTYSTRINGVALUE) { isValid = false; print('date = eMPTYSTRINGVALUE');}
     // date format validation too complicated
 
-    String total_decimalStringData = workingSlotAsStringList[1];
+    var total_decimalStringData = workingSlotAsStringList[1];
     total_decimal = double.tryParse(total_decimalStringData) ?? 0;
     if (total_decimal == 0) { isValid = false; print('total_decimal = 0');}
 
@@ -50,7 +50,7 @@ class WorkingSlot {
             isTWR = true;   
           } break;
           default: {
-            validityError = validityError + 'erreur deuxième lettre du descriptif de tache\n'; 
+            validityError = 'erreur deuxième lettre du descriptif de tache\n'; 
             isValid = false;
           } break;                 
           }
@@ -63,7 +63,7 @@ class WorkingSlot {
             case 'i':{
               isInstructor = true;    
             } break;
-            default: {validityError = validityError + 'erreur troisième lettre du descriptif de tache\n'; 
+            default: {validityError = 'erreur troisième lettre du descriptif de tache\n'; 
                       isValid = false; 
             } break;        
             }
@@ -82,10 +82,15 @@ class WorkingSlot {
       validityError = 'erreur descriptif de tache trop court\n';
       isValid = false; 
     }
-    print(validityError);
+
     notes_de_tache = workingSlotAsStringList[3];  
     notes_journee = workingSlotAsStringList[4]; 
-    // NB la note de journée figure dans un seul Working Slot pour une journée et pas dans tous comme ça aurait été possible
+    lineNumber = workingSlotAsStringList[5]; 
+        print(lineNumber);
+    print('isValid: $isValid');
+    print('validityError: $validityError');
+    // NB s'il y a plusieurs Working Slot à la même date on constate que 
+    // la note de journée figure dans un seul Working Slot et pas dans tous comme on aurait pu s'y attendre
 
   }
 }
