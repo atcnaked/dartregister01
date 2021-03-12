@@ -111,7 +111,7 @@ class DayByDayRegister {
       taskAndDayNotes = taskAndDayNotes + taskAndDayNotesOffirst_SbyS_RL;
 
       var first_SbyS_RL_is_NOT_Valid = ! first_SbyS_RL.isValid;
-      if (first_SbyS_RL_is_NOT_Valid) {
+      if (first_SbyS_RL_is_NOT_Valid) { 
         // TODO//on alimente 
         // discardedWorkingSlotSummary avec
         first_SbyS_RL.date; // et
