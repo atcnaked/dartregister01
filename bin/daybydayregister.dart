@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'constant.dart';
 import 'csv_to_textlist.dart';
 import 'registerline.dart';
@@ -38,19 +40,62 @@ class DayByDayRegister {
     // 2) then Here producing filtered working slot would have been much more direct
 
     var slotBySlotRegister = [];
-
-    int date_index;
-    int total_decimal_index;
-    int taskLetter_index;
-    int notes_de_tache_index;
-    int notes_journee_index;
-
     var headerLine = monthlyReportWithHeaderRaw.removeAt(0);
-    var index = 0;
 
+    var header =  { 'date':'Date', 
+                        'decimal total':'Total (decimal)' ,  
+                                 'task':'Tâche', 
+                            'task note':'Notes tâche', 
+                             'day note':'Notes journée', };
+    
+    //['Date', 'Total (decimal)', 'Tâche', 'Notes tâche', 'Notes journée'];
+
+    int date_index = headerLine.indexOf( header['date']); 
+    int total_decimal_index = headerLine.indexOf( header['decimal total']);
+    int taskLetter_index = headerLine.indexOf( header['task'] );
+    int notes_de_tache_index = headerLine.indexOf( header['task note'] );
+    int notes_journee_index = headerLine.indexOf( header['day note'] );
+
+
+    var mandatoryHeaders = [date_index,  total_decimal_index, taskLetter_index, notes_de_tache_index, notes_journee_index];
+    if (mandatoryHeaders.any((element) => (element == -1)  )) {
+      print('un  ou plusieurs mandatoryHeader absent: TODO remplacer par nombre'); 
+      if (headerLine.indexOf('Date') == -1) {
+        print('Warning: Le header: Date est absent, un numéro de colonne sera choisi mais cela peut entrainer un crash ou bug. ');
+      }
+      if (headerLine.indexOf('Total (decimal)') == -1) {
+         print('Warning: Le header:  est absent, un numéro de colonne sera choisi mais cela peut entrainer un crash ou bug. ');
+        
+      }
+      
+      if (headerLine.indexOf('Tâche') == -1) {
+        
+      }
+      
+      if (headerLine.indexOf('Notes tâche') == -1) {
+        
+      }
+      
+      if (headerLine.indexOf('Notes journée') == -1) {
+        
+      }
+      
+      
+
+
+
+      exit(1); // TODO gestion erreur 
+    }
+
+    /*
+    var index = 0;
+    // on va f les deux méthodees jet comparer
+    int date_indexindexOf = headerLine.indexOf('Date');
     for (var title in headerLine) {
           switch(title) { 
               case 'Date': {  date_index = index; } 
+              print('2 methodes________________________________________________________________________________: ');
+              print(date_index - date_indexindexOf);
               break; 
             
               case 'Total (decimal)': {  total_decimal_index = index; } 
@@ -67,6 +112,7 @@ class DayByDayRegister {
           } 
           index++;
         }
+      */
     var lineCounter = 2; // 2 car la ligne header occupe le numéro 1
     for (var rawWorkingSlot in monthlyReportWithHeaderRaw){
           // debug: en dessous si on met var ça pose un pb:
@@ -74,17 +120,12 @@ class DayByDayRegister {
           // j'ai donc mis List<String>  et ça marche
           // la logique de vérification de type m'échappe...
 
-          ////////////////////////////////////////////
-          ///
-          ///lineCounter.toString(),  à f !!!!!!!!!!!!!!!!!!!!!!!!
-          /////////////////////////////////////////////////////
           List<String> filteredRawWorkingSlot = [ rawWorkingSlot[date_index],
                                         rawWorkingSlot[total_decimal_index],
                                         rawWorkingSlot[taskLetter_index],
                                         rawWorkingSlot[notes_de_tache_index],
                                         rawWorkingSlot[notes_journee_index ],
                                         lineCounter.toString() ];
-          // ici on peut mettre un check si any vide alors pas de rl mais où mettre 
           var rl = RegisterLine(filteredRawWorkingSlot);
           slotBySlotRegister.add(rl);  
           lineCounter++;
