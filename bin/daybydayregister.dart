@@ -11,7 +11,7 @@ class DayByDayRegister {
   RegisterLine totalLine;
   // ici on devrait rajouter 3 éléments: 
   // sumup String = a get to have the numbers of th discarded WS (short info message) build from dayByDayRegisterFrom
-  String discardedWorkingSlotSummary = '';
+  // String discardedWorkingSlotSummary = ''; doublon
   // discarded WS List <int, String> with line number in csv + their error message build from dayByDayRegisterFrom
   String discardedWorkingSlotErrors = '';
   // List of all notes task + day (+ validity) build from slotBySlotRegisterFrom
@@ -48,71 +48,27 @@ class DayByDayRegister {
                             'task note':'Notes tâche', 
                              'day note':'Notes journée', };
     
-    //['Date', 'Total (decimal)', 'Tâche', 'Notes tâche', 'Notes journée'];
-
     int date_index = headerLine.indexOf( header['date']); 
     int total_decimal_index = headerLine.indexOf( header['decimal total']);
     int taskLetter_index = headerLine.indexOf( header['task'] );
     int notes_de_tache_index = headerLine.indexOf( header['task note'] );
     int notes_journee_index = headerLine.indexOf( header['day note'] );
 
-
     var mandatoryHeaders = [date_index,  total_decimal_index, taskLetter_index, notes_de_tache_index, notes_journee_index];
+print('TODO gestion erreur une  ou plusieurs entête est absente dans slotBySlotRegisterFrom(List monthlyReportWithHeaderRaw)');
+
     if (mandatoryHeaders.any((element) => (element == -1)  )) {
-      print('un  ou plusieurs mandatoryHeader absent: TODO remplacer par nombre'); 
-      if (headerLine.indexOf('Date') == -1) {
-        print('Warning: Le header: Date est absent, un numéro de colonne sera choisi mais cela peut entrainer un crash ou bug. ');
+      var errorMessage = 'une ou plusieurs entête est absente: \nun ou des mots suivants recherchés dans la première ligne du fichier n\'ont pas été trouvés: \n';
+      for (var item in header.values) {
+        errorMessage = errorMessage + item+ ', ' ;
       }
-      if (headerLine.indexOf('Total (decimal)') == -1) {
-         print('Warning: Le header:  est absent, un numéro de colonne sera choisi mais cela peut entrainer un crash ou bug. ');
-        
-      }
-      
-      if (headerLine.indexOf('Tâche') == -1) {
-        
-      }
-      
-      if (headerLine.indexOf('Notes tâche') == -1) {
-        
-      }
-      
-      if (headerLine.indexOf('Notes journée') == -1) {
-        
-      }
-      
-      
 
-
-
-      exit(1); // TODO gestion erreur 
+      errorMessage = errorMessage + ' Ajouter les entêtes nécessaire à la bonne position entre des séparateurs (sans doute des virgules); \n';
+      errorMessage = errorMessage + 'Un exemple de ligne qui fonctionne est: \nDate,Démarrer,Terminer,Total (decimal),Tâche,Tâche ID,Tâche Extra 1,Tâche Extra 2,Client,Notes tâche,Jour Total,Notes journée';
+      print(errorMessage);
+      exit(1); // 
     }
 
-    /*
-    var index = 0;
-    // on va f les deux méthodees jet comparer
-    int date_indexindexOf = headerLine.indexOf('Date');
-    for (var title in headerLine) {
-          switch(title) { 
-              case 'Date': {  date_index = index; } 
-              print('2 methodes________________________________________________________________________________: ');
-              print(date_index - date_indexindexOf);
-              break; 
-            
-              case 'Total (decimal)': {  total_decimal_index = index; } 
-              break; 
-            
-              case 'Tâche': {  taskLetter_index = index; } 
-              break; 
-            
-              case 'Notes tâche': {  notes_de_tache_index = index; } 
-              break; 
-            
-              case 'Notes journée': {  notes_journee_index = index; } 
-              break;  
-          } 
-          index++;
-        }
-      */
     var lineCounter = 2; // 2 car la ligne header occupe le numéro 1
     for (var rawWorkingSlot in monthlyReportWithHeaderRaw){
           // debug: en dessous si on met var ça pose un pb:
@@ -139,29 +95,19 @@ class DayByDayRegister {
 
     var dayByDayRegister = [];
 
-    var nonEmptyDummyFirstLine = RegisterLine.intializeFrom ('dummy£ ', 0.0, 0.0, 0.0, 0.0, 0.0, eMPTYSTRINGVALUE, 0, 0); 
+    var nonEmptyDummyFirstLine = RegisterLine.intializeFrom ('nonEmptyDummyFirstLine', 0.0, 0.0, 0.0, 0.0, 0.0, eMPTYSTRINGVALUE, 0, 0); 
     dayByDayRegister.add(nonEmptyDummyFirstLine);
 
     while ( slotBySlotRegister.isNotEmpty ) {       
       RegisterLine first_SbyS_RL = slotBySlotRegister.removeAt(0); 
-
-      //////////////////////
-      // TODO //on alimente taskAndDayNotes avec 
-      var taskAndDayNotesOffirst_SbyS_RL = '${first_SbyS_RL.notes_journee}${first_SbyS_RL.notes_de_tache}${first_SbyS_RL.date}';
-      // TODO// f un get ds RL      
-      taskAndDayNotes = taskAndDayNotes + taskAndDayNotesOffirst_SbyS_RL;
+      // TODO //on alimente taskAndDayNotes    
+        taskAndDayNotes += first_SbyS_RL.taskAndDayNotes; // à tester      
 
       var first_SbyS_RL_is_NOT_Valid = ! first_SbyS_RL.isValid;
+
       if (first_SbyS_RL_is_NOT_Valid) { 
-        // TODO//on alimente 
-        // discardedWorkingSlotSummary avec
-        first_SbyS_RL.date; // et
-        first_SbyS_RL.inCSVlineNumber;
-        
-        // TODO//et discardedWorkingSlotErrors avec
-        first_SbyS_RL.date; // et
-        first_SbyS_RL.inCSVlineNumber;// et
-        first_SbyS_RL.validityError;
+ //erreur       //discardedWorkingSlotErrors = discardedWorkingSlotErrors + first_SbyS_RL.errorText;
+
       }else{
         RegisterLine last_DbyD_RL = dayByDayRegister.last; // here nonEmptyDummyFirstLine mandatory to make algo simpler
         last_DbyD_RL.toString();
