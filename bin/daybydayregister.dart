@@ -26,7 +26,7 @@ class DayByDayRegister {
 
     dayLines = dayByDayRegisterFrom(slotBySlotRegister);
     
-    totalLine = RegisterLine.intializeFrom ('Total', 0.0, 0.0, 0.0, 0.0, 0.0, eMPTYSTRINGVALUE, 0, 0); 
+    totalLine = RegisterLine.intializeFrom ('Total', 0.0, 0.0, 0.0, 0.0, 0.0, eMPTYSTRINGVALUE, 0, 0, '', true, ''); 
     for (var item in dayLines) {
       totalLine.addWith(item);
       totalLine.observation = eMPTYSTRINGVALUE;     
@@ -95,7 +95,7 @@ print('TODO gestion erreur une  ou plusieurs entête est absente dans slotBySlot
 
     var dayByDayRegister = [];
 
-    var nonEmptyDummyFirstLine = RegisterLine.intializeFrom ('nonEmptyDummyFirstLine', 0.0, 0.0, 0.0, 0.0, 0.0, eMPTYSTRINGVALUE, 0, 0); 
+    var nonEmptyDummyFirstLine = RegisterLine.intializeFrom ('nonEmptyDummyFirstLine', 0.0, 0.0, 0.0, 0.0, 0.0, eMPTYSTRINGVALUE, 0, 0, '', true, ''); 
     dayByDayRegister.add(nonEmptyDummyFirstLine);
 
     while ( slotBySlotRegister.isNotEmpty ) {       

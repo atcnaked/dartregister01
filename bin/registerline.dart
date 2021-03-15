@@ -28,11 +28,12 @@ class RegisterLine { // '''éléments de la ligne du registre, used for the glob
   int occurence_TWR = 0;
   int occurence_APP = 0;
   
-  String notes_de_tache = ''; // direct from WorkingSlot
-  String notes_journee = ''; // direct from WorkingSlot
+  //suppr notes_de_tache et notes_journee (inutile car tout passe par notes_de_journee_et_de_tache)
+  //String notes_de_tache = ''; // direct from WorkingSlot
+  //String notes_journee = ''; // direct from WorkingSlot
   
   String notes_de_journee_et_de_tache = '';
-  String inCSVlineNumber; // supprimé inutuile à tester // direct from WorkingSlot
+  //String inCSVlineNumber; // supprimé inutuile à tester // direct from WorkingSlot
   bool isValid = true;// direct from WorkingSlot
   String errorText = '';// direct from WorkingSlot
 
@@ -62,11 +63,11 @@ class RegisterLine { // '''éléments de la ligne du registre, used for the glob
       if ( workingSlot.isAPP ){ occurence_APP = 1; }
     }
 
-    notes_de_tache = workingSlot.notes_de_tache;
-    notes_journee = workingSlot.notes_de_tache;// erreur? deux fois tache ??
+    //notes_de_tache = workingSlot.notes_de_tache;
+    //notes_journee = workingSlot.notes_de_tache;// erreur? deux fois tache ??
     
     ////////////////////////////////
-    notes_de_journee_et_de_tache = '';
+    //notes_de_journee_et_de_tache = ''; inutile car '' par initialisation
     if (workingSlot.notes_journee.isNotEmpty) { // atention il faut mettre != EMptystring value
       notes_de_journee_et_de_tache += 'Note de journée du ${workingSlot.date}: ${workingSlot.notes_journee}\n';      
     }
@@ -81,13 +82,12 @@ class RegisterLine { // '''éléments de la ligne du registre, used for the glob
     
   }
   // direct constructor (to create TOTALINE or blank line)
-  gérer les nouveaux attribut
-  RegisterLine.intializeFrom (this.date, this.h_as_trainee, this.h_simulator, this.h_alone_on_position, this.h_as_instructor, this.h_total, this.observation, this.occurence_TWR, this.occurence_APP); 
+  RegisterLine.intializeFrom (this.date, this.h_as_trainee, this.h_simulator, this.h_alone_on_position, this.h_as_instructor, this.h_total, this.observation, this.occurence_TWR, this.occurence_APP, this.notes_de_journee_et_de_tache, this.isValid, this.errorText); 
 
 ///////////////////////////////
 /////
   String get taskAndDayNotes{ // tester
-    return notes_journee + notes_de_tache; 
+    return notes_de_journee_et_de_tache; 
   }
 
   String get warning{
@@ -100,7 +100,6 @@ class RegisterLine { // '''éléments de la ligne du registre, used for the glob
   
   @override
   String toString(){
-    gérer les nouveaux attribut
     return '${date}, ${h_as_trainee}, ${h_simulator}, ${h_alone_on_position}, ${h_as_instructor}, ${h_total}, ${observation}, ${occurence_TWR}, ${occurence_APP}';
     }
 
@@ -121,8 +120,9 @@ class RegisterLine { // '''éléments de la ligne du registre, used for the glob
   occurence_TWR += other.occurence_TWR;
   occurence_APP += other.occurence_APP;
   
-  notes_journee += other.notes_journee;
-  notes_de_tache += other.notes_journee; 
+  notes_de_journee_et_de_tache += other.notes_de_journee_et_de_tache ;
+  //notes_journee += other.notes_journee;
+  //notes_de_tache += other.notes_journee; 
 
   // no use to add errorText
 
