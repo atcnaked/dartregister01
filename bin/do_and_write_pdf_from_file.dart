@@ -8,16 +8,20 @@ import 'daybydayregister.dart';
 
 Future<void> main({String fileName = 'p1.csv'}) async {
     var myRegister = DayByDayRegister(fileName);
-    var sourceDatas3 = ArrayForPDF(dayByDayRegister : myRegister).toLLS();
-    // recup liste erreur création DayByDayRegister.liste erreur creation, DayByDayRegister.liste obs
-
-      var warnings = myRegister.warnings;
+    print('myRegister.discardedWorkingSlotErrors: ');
+    print(myRegister.discardedWorkingSlotErrors);
+    print('myRegister.taskAndDayNotes: ');
+    print(myRegister.taskAndDayNotes);
+  
+    var timeLimitWarning = myRegister.timeLimitWarning;
     print('warnings: ');
-    print(warnings);
-    var observations = myRegister.observations;
-    print('observations: ');
-    print(observations);
+    print(timeLimitWarning);
+    //var observations = myRegister.observations;
+    //print('observations: ');
+    //print(observations);
 
+  var sourceDatas3 = ArrayForPDF(dayByDayRegister : myRegister).toLLS();
+ 
 
   var sourceDatas2 = [
 ['  Date      ', 'heures comme instruit', 'heures standarts', 'heures comme instructeur', 'heures sur simulateur', 'Total', 'observation ', 'occurrences TWR', 'occurrences APP'],

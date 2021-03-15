@@ -8,14 +8,10 @@ import 'registerline.dart';
 
 class DayByDayRegister {
   List dayLines;
-  RegisterLine totalLine;
-  // ici on devrait rajouter 3 éléments: 
-  // sumup String = a get to have the numbers of th discarded WS (short info message) build from dayByDayRegisterFrom
-  // String discardedWorkingSlotSummary = ''; doublon
-  // discarded WS List <int, String> with line number in csv + their error message build from dayByDayRegisterFrom
+  RegisterLine totalLine; 
   String discardedWorkingSlotErrors = '';
-  // List of all notes task + day (+ validity) build from slotBySlotRegisterFrom
   String taskAndDayNotes = '';
+  String timeLimitWarning = '';
 
   DayByDayRegister (String fileName){ 
     var monthlyReportWithHeaderRaw = monthlyReportWithHeaderRawFrom(fileName);
@@ -31,6 +27,9 @@ class DayByDayRegister {
       totalLine.addWith(item);
       totalLine.observation = eMPTYSTRINGVALUE;     
     }
+
+    timeLimitWarning = _timeLimitWarning;
+
   }
 
 
@@ -100,13 +99,13 @@ print('TODO gestion erreur une  ou plusieurs entête est absente dans slotBySlot
 
     while ( slotBySlotRegister.isNotEmpty ) {       
       RegisterLine first_SbyS_RL = slotBySlotRegister.removeAt(0); 
-      // TODO //on alimente taskAndDayNotes    
-        taskAndDayNotes += first_SbyS_RL.taskAndDayNotes; // à tester      
+      taskAndDayNotes += first_SbyS_RL.taskAndDayNotes; // à tester      
 
       var first_SbyS_RL_is_NOT_Valid = ! first_SbyS_RL.isValid;
 
       if (first_SbyS_RL_is_NOT_Valid) { 
- //erreur       //discardedWorkingSlotErrors = discardedWorkingSlotErrors + first_SbyS_RL.errorText;
+ //erreur       //
+        discardedWorkingSlotErrors = discardedWorkingSlotErrors + first_SbyS_RL.errorText;
 
       }else{
         RegisterLine last_DbyD_RL = dayByDayRegister.last; // here nonEmptyDummyFirstLine mandatory to make algo simpler
@@ -123,13 +122,12 @@ print('TODO gestion erreur une  ou plusieurs entête est absente dans slotBySlot
     return dayByDayRegister;
     }
 
-    String get warnings{
-    var warnings = '';
+    String get _timeLimitWarning{
+    var timeLimitWarning = '';
     for (var rl in dayLines) {
-      if (rl.warning != eMPTYSTRINGVALUE) { warnings = warnings + ', ' + rl.date + ': ' + rl.warning;        
-      }
+      timeLimitWarning += rl.warningRL;   
     }
-    return warnings;
+    return timeLimitWarning;
   }
 
   String get observations {

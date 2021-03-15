@@ -28,12 +28,8 @@ class RegisterLine { // '''éléments de la ligne du registre, used for the glob
   int occurence_TWR = 0;
   int occurence_APP = 0;
   
-  //suppr notes_de_tache et notes_journee (inutile car tout passe par notes_de_journee_et_de_tache)
-  //String notes_de_tache = ''; // direct from WorkingSlot
-  //String notes_journee = ''; // direct from WorkingSlot
-  
   String notes_de_journee_et_de_tache = '';
-  //String inCSVlineNumber; // supprimé inutuile à tester // direct from WorkingSlot
+  
   bool isValid = true;// direct from WorkingSlot
   String errorText = '';// direct from WorkingSlot
 
@@ -48,51 +44,35 @@ class RegisterLine { // '''éléments de la ligne du registre, used for the glob
     if ( workingSlot.isSimulation ){ h_simulator = workingSlot.total_decimal; }
 
     h_total = workingSlot.total_decimal;
-/*
-    observation = eMPTYSTRINGVALUE;
-    if (workingSlot.notes_de_tache != eMPTYSTRINGVALUE) {
-      observation = 'notes_de_tache: ' + workingSlot.notes_de_tache + ', '; 
-          }
 
-    if (workingSlot.notes_journee != eMPTYSTRINGVALUE) {
-      observation = observation + 'notes_journee: ' + workingSlot.notes_journee + ', '; 
-    }
-*/
     if( workingSlot.isWorthAnOccurrence ){
       if ( workingSlot.isTWR ){ occurence_TWR = 1; }
       if ( workingSlot.isAPP ){ occurence_APP = 1; }
     }
 
-    //notes_de_tache = workingSlot.notes_de_tache;
-    //notes_journee = workingSlot.notes_de_tache;// erreur? deux fois tache ??
-    
-    ////////////////////////////////
-    //notes_de_journee_et_de_tache = ''; inutile car '' par initialisation
-    if (workingSlot.notes_journee.isNotEmpty) { // atention il faut mettre != EMptystring value
+    if (workingSlot.notes_journee.isNotEmpty) { // attention il faut mettre != eMPTYSTRINGVALUE
       notes_de_journee_et_de_tache += 'Note de journée du ${workingSlot.date}: ${workingSlot.notes_journee}\n';      
     }
     if (workingSlot.notes_de_tache.isNotEmpty) { 
       notes_de_journee_et_de_tache += 'Note de tâche du ${workingSlot.date} (ligne ${workingSlot.lineNumber}): ${workingSlot.notes_de_tache}\n';      
     }
-    //inCSVlineNumber = workingSlot.lineNumber;
+
     isValid = workingSlot.isValid;
     if (workingSlot.validityError.isNotEmpty) {
-      errorText = 'Créneau de travail non valide à la ligne ${workingSlot.lineNumber} à la date ${workingSlot.date}: erreur ${workingSlot.validityError}\n';  
+      errorText = 'Créneau de travail non valide ligne ${workingSlot.lineNumber} date ${workingSlot.date}: ${workingSlot.validityError}\n';  
     }
     
   }
   // direct constructor (to create TOTALINE or blank line)
   RegisterLine.intializeFrom (this.date, this.h_as_trainee, this.h_simulator, this.h_alone_on_position, this.h_as_instructor, this.h_total, this.observation, this.occurence_TWR, this.occurence_APP, this.notes_de_journee_et_de_tache, this.isValid, this.errorText); 
 
-///////////////////////////////
-/////
   String get taskAndDayNotes{ // tester
     return notes_de_journee_et_de_tache; 
   }
 
-  String get warning{
+  String get warningRL{
     var w = eMPTYSTRINGVALUE; 
-    if (h_total > (11.0 *0.80) ) { w = 'WARNING au $date: temps de repos apparemment trop faible';} 
+    if (h_total > (11.0 *0.87) ) { w = 'WARNING au $date: temps de repos apparemment trop faible\n';} 
     return w;
     }
 
@@ -104,30 +84,13 @@ class RegisterLine { // '''éléments de la ligne du registre, used for the glob
     }
 
   void addWith( RegisterLine other ) { // caution no date check !
-  //TODO: warning if different date, send to DbyD_RL otherr list to be shown at the end !
-  h_as_trainee += other.h_as_trainee;
-  h_simulator += other.h_simulator;
-  h_alone_on_position += other.h_alone_on_position;
-  h_as_instructor += other.h_as_instructor;
-  h_total += other.h_total;
-/*
-  // 4 cases possible, sthing happens only if other.observation != eMPTYSTRINGVALUE (Can be done with if statement but more complex to debug)
-  if (observation == eMPTYSTRINGVALUE && other.observation == eMPTYSTRINGVALUE) {  }// do nothing: observation is already at eMPTYSTRINGVALUE
-  if (observation == eMPTYSTRINGVALUE && other.observation != eMPTYSTRINGVALUE) { observation = other.observation ; }
-  if (observation != eMPTYSTRINGVALUE && other.observation == eMPTYSTRINGVALUE) {  }
-  if (observation != eMPTYSTRINGVALUE && other.observation != eMPTYSTRINGVALUE) { observation = observation + ', ' + other.observation ; }
-*/
-  occurence_TWR += other.occurence_TWR;
-  occurence_APP += other.occurence_APP;
-  
-  notes_de_journee_et_de_tache += other.notes_de_journee_et_de_tache ;
-  //notes_journee += other.notes_journee;
-  //notes_de_tache += other.notes_journee; 
-
-  // no use to add errorText
-
-  
- 
+    h_as_trainee += other.h_as_trainee;
+    h_simulator += other.h_simulator;
+    h_alone_on_position += other.h_alone_on_position;
+    h_as_instructor += other.h_as_instructor;
+    h_total += other.h_total;
+    occurence_TWR += other.occurence_TWR;
+    occurence_APP += other.occurence_APP;
   }
 
   List<String> toStringList(){
