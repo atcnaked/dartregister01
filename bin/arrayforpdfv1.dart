@@ -3,17 +3,16 @@ import 'constant.dart';
 import 'daybydayregister.dart';
 
 
-class ArrayForPDF extends DayByDayRegister{
+class ArrayForPDF {
   List<List<String>> _arrayForPDF;
 
-  ArrayForPDF ({ String fileName,bool interligne = true, bool replaceZeroByNothingInDayLines = true, 
-                  bool replaceZeroByNothingInTotalLine = false}) : super(fileName)
+  ArrayForPDF({DayByDayRegister dayByDayRegister ,bool interligne = true, bool replaceZeroByNothingInDayLines = true, bool replaceZeroByNothingInTotalLine = false})
   {
     List<List<String>> array = [];
 
     array.add( [' Date ', 'heures comme instruit', 'heures standarts ', 'heures comme instructeur', 'heures sur simulateur', ' Total ', '', ' occurrences TWR', ' occurrences APP'] );//' observation '
 
-    for (var rl in super.dayLines) {
+    for (var rl in dayByDayRegister.dayLines) {
       rl.observation = eMPTYSTRINGVALUE; // on n'affichera jamais aucun commentaire
       var rlStringList = rl.toStringList();
       rlStringList = replaceZeroByNothingIn(rlStringList);
@@ -22,7 +21,7 @@ class ArrayForPDF extends DayByDayRegister{
 
     if (interligne = true) { array.add( ['', '', '', '', '', '', '', '', ''] ); }
 
-    var totalLineStringList = super.totalLine.toStringList();
+    var totalLineStringList = dayByDayRegister.totalLine.toStringList();
     if (replaceZeroByNothingInDayLines) {
           totalLineStringList = replaceZeroByNothingIn(totalLineStringList);        
     }

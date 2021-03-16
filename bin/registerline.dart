@@ -13,6 +13,8 @@ puis plus loin dans le générateur::
 */
 
 
+import 'package:intl/intl.dart';
+
 import 'constant.dart';
 import 'workingslot.dart';
 
@@ -31,7 +33,7 @@ class RegisterLine { // '''éléments de la ligne du registre, used for the glob
   String notes_de_journee_et_de_tache = '';
   
   bool isValid = true;// direct from WorkingSlot
-  String errorText = '';// direct from WorkingSlot
+  String errorText = '';
 
 
   RegisterLine ( List <String> listOfStringfilteredRawWorkingSlot ){ 
@@ -59,7 +61,7 @@ class RegisterLine { // '''éléments de la ligne du registre, used for the glob
 
     isValid = workingSlot.isValid;
     if (workingSlot.validityError.isNotEmpty) {
-      errorText = 'Créneau de travail non valide ligne ${workingSlot.lineNumber} date ${workingSlot.date}: ${workingSlot.validityError}\n';  
+      errorText = 'Créneau de travail non valide ligne ${workingSlot.lineNumber} date ${workingSlot.date}: ${workingSlot.validityError}';  
     }
     
   }
@@ -93,17 +95,36 @@ class RegisterLine { // '''éléments de la ligne du registre, used for the glob
     occurence_APP += other.occurence_APP;
   }
 
-  List<String> toStringList(){
+/* deprecated
+  List<String> toStringListv1(){
     var listResult = <String>[];
     
     for (var item in [date, h_as_trainee, h_simulator, h_alone_on_position, h_as_instructor, h_total, observation, occurence_TWR, occurence_APP] ) {
       if (item.runtimeType == double) { 
-        item = toNaiveDouble2digit( item);
+        //item = toNaiveDouble2digit( item);
       }
       item = item.toString();
-      if (item == '0.0') {
+      if (item == '0.0' || item == '0') {
         item = eMPTYSTRINGVALUE;
         
+      }
+      listResult.add( item );
+    }
+    return listResult;
+  } */ 
+
+List<String> toStringList(){  
+    var listResult = <String>[];
+    
+    for (var item in [date, h_as_trainee, h_simulator, h_alone_on_position, h_as_instructor, h_total, observation, occurence_TWR, occurence_APP] ) {
+      if (item.runtimeType == double) { 
+        item = formatToString(item);
+      } else{
+        item = item.toString();
+      }
+      
+      if (item == '0') {
+        item = eMPTYSTRINGVALUE;        
       }
       listResult.add( item );
     }
@@ -114,15 +135,33 @@ class RegisterLine { // '''éléments de la ligne du registre, used for the glob
 
 
 
+String formatToString(double x) {
+  String result;
+  if ( x == 0) {
+    result = eMPTYSTRINGVALUE;
+    return result; }
 
+  else {
+    var f = NumberFormat('#0.00', 'en_US');
+    result = f.format(x); // ça arrondi correctement
+    if ( x > 0 && x < 10 ) {
+      result = '  $result';
+    }
+    else if (x >= 10) {
+      return result;    
+    }
+    return result;
+  }
+}
 
-double toNaiveDouble2digit(double x){
-// [2.0, 2.0]
-// [0.404, 0.4]
-// [1.505, 1.5] naive because 1.505 shoulb be rounded to 1.51 and not 1.5
-// [3.606, 3.61]
-// [4.917, 4.92]
+double toNaiveDouble2digit(double x){ // do not use for math !!!!
     return num.parse(x.toStringAsFixed(2));
+    // do not use for math !!!!
+    // [2.0, 2.0]
+    // [0.404, 0.4]
+    // [1.505, 1.5] naive because 1.505 shoulb be rounded to 1.51 and not 1.5
+    // [3.606, 3.61]
+    // [4.917, 4.92]
 
   }
 

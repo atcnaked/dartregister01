@@ -22,12 +22,12 @@ class WorkingSlot {
    
   WorkingSlot( List<String> workingSlotAsStringList ){
     date = workingSlotAsStringList[0]; 
-    if (date == eMPTYSTRINGVALUE) { isValid = false; print('date = eMPTYSTRINGVALUE');}
+    if (date == eMPTYSTRINGVALUE) { isValid = false; }
     // date format validation too complicated
 
     var total_decimalStringData = workingSlotAsStringList[1];
     total_decimal = double.tryParse(total_decimalStringData) ?? 0;
-    if (total_decimal == 0) { isValid = false; print('total_decimal = 0');}
+    if (total_decimal == 0) { isValid = false; }
 
     var taskLetter = workingSlotAsStringList[2];
     
@@ -86,9 +86,6 @@ class WorkingSlot {
     notes_de_tache = workingSlotAsStringList[3];  
     notes_journee = workingSlotAsStringList[4]; 
     lineNumber = workingSlotAsStringList[5]; 
-        print(lineNumber);
-    print('isValid: $isValid');
-    print('validityError: $validityError');
     // NB s'il y a plusieurs Working Slot à la même date on constate que 
     // la note de journée figure dans un seul Working Slot et pas dans tous comme on aurait pu s'y attendre
 

@@ -54,16 +54,21 @@ class DayByDayRegister {
     int notes_journee_index = headerLine.indexOf( header['day note'] );
 
     var mandatoryHeaders = [date_index,  total_decimal_index, taskLetter_index, notes_de_tache_index, notes_journee_index];
-print('TODO gestion erreur une  ou plusieurs entête est absente dans slotBySlotRegisterFrom(List monthlyReportWithHeaderRaw)');
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+print('TODO gestion EXCEPTION une ou plusieurs entête est absente dans slotBySlotRegisterFrom(List monthlyReportWithHeaderRaw)');
 
     if (mandatoryHeaders.any((element) => (element == -1)  )) {
-      var errorMessage = 'une ou plusieurs entête est absente: \nun ou des mots suivants recherchés dans la première ligne du fichier n\'ont pas été trouvés: \n';
+      var errorMessage = '''une ou plusieurs entête est absente: \n
+                            un ou des mots suivants recherchés dans la première ligne du fichier n\'ont pas été trouvés: \n''';
       for (var item in header.values) {
         errorMessage = errorMessage + item+ ', ' ;
       }
 
-      errorMessage = errorMessage + ' Ajouter les entêtes nécessaire à la bonne position entre des séparateurs (sans doute des virgules); \n';
-      errorMessage = errorMessage + 'Un exemple de ligne qui fonctionne est: \nDate,Démarrer,Terminer,Total (decimal),Tâche,Tâche ID,Tâche Extra 1,Tâche Extra 2,Client,Notes tâche,Jour Total,Notes journée';
+      errorMessage = errorMessage + ''' Ajouter les entêtes nécessaire à la bonne 
+                                    position entre des séparateurs (sans doute des virgules); \n
+                                    Un exemple de ligne qui fonctionne est: \n
+                                    Date,Démarrer,Terminer,Total (decimal),Tâche,Tâche ID,Tâche Extra 1,
+                                    Tâche Extra 2,Client,Notes tâche,Jour Total,Notes journée''';
       print(errorMessage);
       exit(1); // 
     }
@@ -99,14 +104,12 @@ print('TODO gestion erreur une  ou plusieurs entête est absente dans slotBySlot
 
     while ( slotBySlotRegister.isNotEmpty ) {       
       RegisterLine first_SbyS_RL = slotBySlotRegister.removeAt(0); 
-      taskAndDayNotes += first_SbyS_RL.taskAndDayNotes; // à tester      
+      taskAndDayNotes += first_SbyS_RL.taskAndDayNotes; 
 
       var first_SbyS_RL_is_NOT_Valid = ! first_SbyS_RL.isValid;
 
       if (first_SbyS_RL_is_NOT_Valid) { 
- //erreur       //
-        discardedWorkingSlotErrors = discardedWorkingSlotErrors + first_SbyS_RL.errorText;
-
+        discardedWorkingSlotErrors += first_SbyS_RL.errorText;
       }else{
         RegisterLine last_DbyD_RL = dayByDayRegister.last; // here nonEmptyDummyFirstLine mandatory to make algo simpler
         last_DbyD_RL.toString();
@@ -130,15 +133,33 @@ print('TODO gestion erreur une  ou plusieurs entête est absente dans slotBySlot
     return timeLimitWarning;
   }
 
-  String get observations {
-    var observations = '';
-    for (var rl in dayLines) {
-      if (rl.observation != eMPTYSTRINGVALUE) { 
-        observations = observations + ' OBSERVATION: ' + rl.date + ': ' + rl.observation;        
-      }
-    }
-    return observations;
-  }
 
+/*
+// pour test
+  List<List<String>> get arrayForPDF {
+      var arrayForPDF = [
+        ['  Date      ', 'heures comme instruit', 'heures standarts', 'heures comme instructeur', 'heures sur simulateur', 'Total', 'observation ', 'occurrences TWR', 'occurrences APP'],
+        [' 2020-02-04', ' NIL', ' NIL', ' 14.27', ' NIL', ' 14.27', ' NIL', ' 0', ' 3'],
+        [' 2020-02-05', ' NIL', ' NIL', ' 4.65', ' 1.1', ' 5.75', ' NIL', ' 2', ' 3'],
+        [' 2020-02-06', ' NIL', ' NIL', ' 5.59', ' NIL', ' 5.59', ' NIL', ' 2', ' 4'],
+        [' 2020-02-10', ' NIL', ' NIL', ' 4.15', ' NIL', ' 4.15', ' NIL', ' 1', ' 2'],
+        [' 2020-02-11', ' NIL', ' NIL', ' 5.32', ' NIL', ' 5.32', ' NIL', ' 0', ' 3'],
+        [' 2020-02-12', ' NIL', ' NIL', ' 5.45', ' NIL', ' 5.45', ' NIL', ' 0', ' 3'],
+        [' 2020-02-16', ' NIL', ' NIL', ' 1.47', ' NIL', ' 1.47', ' NIL', ' 1', ' 0'],
+        [' 2020-02-17', ' NIL', ' NIL', ' 6.83', ' NIL', ' 6.83', ' NIL', ' 0', ' 4'],
+        [' 2020-02-18', ' NIL', ' NIL', ' 8.08', ' NIL', ' 8.08', ' NIL', ' 2', ' 0'],
+        [' 2020-02-22', ' NIL', ' NIL', ' 5.31', ' NIL', ' 5.31', ' NIL', ' 1', ' 2'],
+        [' 2020-02-23', ' NIL', ' NIL', ' 6.2', ' NIL', ' 6.2', ' NIL', ' 1', ' 4'],
+        [' 2020-02-24', ' NIL', ' NIL', ' 5.68', ' NIL', ' 5.68', ' NIL', ' 1', ' 3'],
+        [' 2020-02-28', ' NIL', ' NIL', ' 3.65', ' 2.22', ' 5.87', ' NIL', ' 2', ' 2'],
+        [' 2020-02-29', ' NIL', ' NIL', ' 4.5', ' NIL', ' 4.5', ' NIL', ' 1', ' 1'],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' Total', ' NIL', ' NIL', ' 81.15', ' 3.32', ' 84.47', ' NIL', ' 14', ' 34']
+          ];
+
+
+    return arrayForPDF;
+  }
+*/
 
 }
