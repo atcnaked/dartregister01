@@ -54,8 +54,36 @@ Future generatePDF(String signatureFullName, List<List<String>> pdfStringList) a
   final String timestamp = formatter.format(now2);
   final registerFileName ='${underscorefullName}LFLC_registre_$timestamp.pdf';
   
-  final file2 = File(registerFileName);
+  // TODO: f gestion erreurs !!! Exception 
+  //original 
+  final file2 = File(registerFileName); 
   await file2.writeAsBytes(await doc.save());
+
+/*
+  try {
+    await file2.writeAsBytes(await doc.save());
+    print('File is now closed.');
+  } on Exception catch (e) {
+    
+    print('là');
+    print('Error: $e');
+      // TODO
+  }
+
+*/
+  /////////////////////////////////
+  ///
+  /*
+      File file2;
+      try {
+        file2 = File('');
+        await file2.writeAsBytes(await doc.save());
+      } on Exception catch(e){
+        var myregException = Exception ('création du fichier PDF impossible, \n$e');
+        throw(myregException);
+      }     
+  */
+    //////////////////////////////////////
   
   print('fichier PDF enregistré sous le nom: $registerFileName');
 }

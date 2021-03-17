@@ -1,10 +1,26 @@
 import 'arrayforpdf.dart';
 import 'reg_pdf_generator.dart';
+import 'dart:io';
+import 'csv_to_textlist.dart';
 
 Future<void> main({String theFileName = 'p1.csv',String signatureFullName = 'GAUTIER Frédéric'}) async {
+  String textViewOfFileForMistakes; 
+  var lines = getLinesFromFile(theFileName);// TODO try catch if pb
+  textViewOfFileForMistakes = textOf(lines);
+  print('textViewOfFileForMistakes: \n$textViewOfFileForMistakes'); 
 
   // myRegister object creation
-    var myRegister = ArrayForPDF(fileName : theFileName); // Exception raised if unable
+  ArrayForPDF myRegister;
+    try {
+  myRegister = ArrayForPDF(fileName : theFileName); 
+      
+    } catch (e) {
+      String errorMessage = e.toString();
+      print('Un problème s\'est produit lors de la construction du registre.\n' + 
+            'L\'erreur renvoyée est $errorMessage.\n' +
+            'Le programmme va s\'arrêter');
+      exit(1);
+    }
 
     // some objects are available before print
     print('myRegister.discardedWorkingSlotErrors: ');
@@ -13,6 +29,8 @@ Future<void> main({String theFileName = 'p1.csv',String signatureFullName = 'GAU
     print(myRegister.taskAndDayNotes);
     print('myRegister.timeLimitWarning: ');
     print(myRegister.timeLimitWarning);
+
+
     // 3 choix pour la preview:
     // on peut utiliser arrayForPDF et envoyer vers un Table
     // on peut générer une liste de text = TextList: à générer depuis arrayForPDF
@@ -43,7 +61,21 @@ Future<void> main({String theFileName = 'p1.csv',String signatureFullName = 'GAU
   var pdfStringList = sourceDatas3; // pdfStringList alimente le tableau PDF
 
   // PDF file creation
-  await generatePDF(signatureFullName, pdfStringList);// Exception raised if unable
+await generatePDF(signatureFullName, pdfStringList);
+
+// tested but exception isn't catched, future pb ??
+/*
+  try {
+    // double a = 1/0; print(a); ! // no Exception, returns infinity !!!
+    await generatePDF(signatureFullName, pdfStringList);
+  } on Exception catch (e) {
+      String errorMessage = e.toString();
+      print('Un problème s\'est produit lors de la création et l\'écriture du PDF.\n' 
+            'L\'erreur renvoyée est $errorMessage.\n'
+            'Le programmme va s\'arrêter');
+      exit(1);
+  }
+*/
 
 }
 

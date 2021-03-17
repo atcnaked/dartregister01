@@ -9,9 +9,16 @@ List monthlyReportWithHeaderRawFrom(String fileName) {
     
   }
 
+////// Here different options could be handle: XML file, other separator in CSV
   List getLinesFromFile(String fileName) {
     var data = File(fileName);  
-    var lines = data.readAsLinesSync(encoding: latin1); // utf8 ou ascii possible
+    List lines;
+    try {
+      lines = data.readAsLinesSync(encoding: latin1); // utf8 ou ascii possible
+    } on Exception catch(e){
+      var myregException = Exception ('ouverture ou lecture fichier impossible, \n$e');
+      throw(myregException);
+    }       
     return lines;
   }
 
@@ -28,4 +35,12 @@ List monthlyReportWithHeaderRawFrom(String fileName) {
         monthlyReportRaw.add(fields);      
     }
     return monthlyReportRaw;
+  }
+
+    String textOf(List<String> lines){
+    var textResult = ''; 
+    for (var line in lines) {     
+      textResult += line + '\n';  
+    }
+    return textResult;
   }
